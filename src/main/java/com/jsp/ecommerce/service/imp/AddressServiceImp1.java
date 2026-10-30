@@ -6,6 +6,7 @@ import com.jsp.ecommerce.dto.AddressUpdateReq;
 import com.jsp.ecommerce.entity.Address;
 import com.jsp.ecommerce.entity.User;
 import com.jsp.ecommerce.exception.AddressNotFound;
+import com.jsp.ecommerce.exception.UserNotFound;
 import com.jsp.ecommerce.repository.AddressRepository;
 import com.jsp.ecommerce.repository.UserRepository;
 import com.jsp.ecommerce.service.AddressService;
@@ -20,7 +21,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AddressServiceImp1 implements AddressService {
-    private final UserRepository userRepo;
     private final UserService userService;
     private final AddressRepository addRepo;
     private final ObjectMapper objectMapper;
@@ -32,17 +32,16 @@ public class AddressServiceImp1 implements AddressService {
 
         Address address = objectMapper.convertValue(addressCreationReq, Address.class);
         address.setUser(user);
+        address=addRepo.save(address);
 
-        return objectMapper.convertValue(addRepo.save(address), AddressResponse.class);
+        return markAddressDefault(address.getId());
 
     }
 
     public List<AddressResponse> getAddresses(long id) {
-        User user = userService.findById(id);
-
         List<AddressResponse> addresses = new ArrayList<>();
 
-        user.getAddresses().stream()
+        addRepo.findByUser_Id(id).stream()
                             .forEach(address->addresses
                             .add(objectMapper.convertValue(address, AddressResponse.class)));
 
@@ -64,12 +63,28 @@ public class AddressServiceImp1 implements AddressService {
         Address address = addRepo.findById(id)
                 .orElseThrow(() -> new AddressNotFound("Address with id "+id+" not found"));
 
-//        User user =address.getUser();
-//        user.getAddresses().remove(address);
-//        userRepo.save(user);
-
         addRepo.delete(address);
         return objectMapper.convertValue(address, AddressResponse.class);
 
+    }
+
+    public AddressResponse markAddressDefault(long addId) {
+
+        Address newDefaultAdd = addRepo.findById(addId).orElseThrow(
+                () -> new AddressNotFound("Address with id "+addId+" not found"));
+
+        User user = newDefaultAdd.getUser();
+
+        Address oldDefaultAdd = addRepo.findByUserIdAndIsDefaultTrue(user.getId());
+
+        if(oldDefaultAdd != null) {
+            oldDefaultAdd.setDefault(false);
+            addRepo.save(oldDefaultAdd);
+        }
+
+        newDefaultAdd.setDefault(true);
+        addRepo.save(newDefaultAdd);
+
+        return objectMapper.convertValue(newDefaultAdd, AddressResponse.class);
     }
 }

@@ -2,6 +2,7 @@ package com.jsp.ecommerce.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity

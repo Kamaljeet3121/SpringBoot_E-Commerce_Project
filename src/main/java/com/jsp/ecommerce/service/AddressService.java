@@ -12,4 +12,5 @@ public interface AddressService {
     List<AddressResponse> getAddresses(long id);
     AddressResponse updateAddress(AddressUpdateReq addressUpdateReq);
     AddressResponse deleteAddress(long id);
+    AddressResponse markAddressDefault(long id);
 }

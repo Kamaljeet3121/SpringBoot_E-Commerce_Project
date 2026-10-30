@@ -25,7 +25,7 @@ public class AddressController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AddressResponse>> GetAddress(@RequestParam long id){
+    public ResponseEntity<List<AddressResponse>> GetAddresses(@RequestParam long id){
 
         return ResponseEntity.status(HttpStatus.FOUND).body(addService.getAddresses(id));
     }
@@ -40,5 +40,11 @@ public class AddressController {
     public ResponseEntity<AddressResponse> deleteAddress(@PathVariable long id){
 
         return ResponseEntity.status(HttpStatus.OK).body(addService.deleteAddress(id));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<AddressResponse> markDefaultAddress(@PathVariable long id){
+        return ResponseEntity.status(HttpStatus.OK).body(addService.markAddressDefault(id));
+
     }
 }

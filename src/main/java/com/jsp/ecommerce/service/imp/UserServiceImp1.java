@@ -30,13 +30,10 @@ public class UserServiceImp1 implements UserService {
     public UserResponse CreateUser(UserSignUpReq userSignUpReq){
 
         if(userRepo.existsByEmail(userSignUpReq.getEmail())){
-            throw new UserAlreadyExists("User with email "+userSignUpReq.getEmail()+" already exists");
-        }
+            throw new UserAlreadyExists("User with email "+userSignUpReq.getEmail()+" already exists");}
 
         User user =objectMapper.convertValue(userSignUpReq,User.class);
-
         user = userRepo.save(user);
-
         return objectMapper.convertValue(user,UserResponse.class);
     }
 
@@ -57,8 +54,8 @@ public class UserServiceImp1 implements UserService {
         User user = userRepo.findByPhone(userLoginReq.getPhone())
                 .orElseThrow(() -> new UserNotFound("User with email " + userLoginReq.getEmail() + " not found"));
 
-        if (!user.getPassword().equals(userLoginReq.getPassword()))
-            throw new UserPasswordInvalid("invalid Password");
+        if (!user.getPassword().equals(userLoginReq.getPassword())){
+            throw new UserPasswordInvalid("invalid Password");}
 
             return objectMapper.convertValue(user, UserResponse.class);
     }
