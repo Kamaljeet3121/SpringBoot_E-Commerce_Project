@@ -18,7 +18,6 @@ import java.util.List;
 @RequestMapping("/Auth")
 public class UserController {
     private final UserService userService;
-    private final ObjectMapper objectMapper;
 
     @PostMapping("/register")
     public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserSignUpReq user){
@@ -27,7 +26,10 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<UserResponse> signIn(@RequestBody @Valid UserLoginReq userLoginReq){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.login(userLoginReq));
+        if(userLoginReq.getEmail() != null)
+        return ResponseEntity.status(HttpStatus.OK).body(userService.loginByEmail(userLoginReq));
+
+        return ResponseEntity.status(HttpStatus.OK).body(userService.loginByPhone(userLoginReq));
     }
 
     @GetMapping("/fetchAll")

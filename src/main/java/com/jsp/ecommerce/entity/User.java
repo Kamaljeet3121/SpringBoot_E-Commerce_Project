@@ -24,7 +24,7 @@ public class User {
     private long phone;
     private boolean enabled;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Address> addresses;
 

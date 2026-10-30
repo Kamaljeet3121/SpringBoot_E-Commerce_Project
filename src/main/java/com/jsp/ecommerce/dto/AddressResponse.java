@@ -12,5 +12,4 @@ public class AddressResponse {
     private String state;
     private int pincode;
     private String country;
-    private UserResponse user;
 }

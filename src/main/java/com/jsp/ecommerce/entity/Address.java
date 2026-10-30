@@ -18,5 +18,6 @@ public class Address {
     private boolean isDefault;
 
     @ManyToOne
+    @JoinColumn
     private User user;
 }

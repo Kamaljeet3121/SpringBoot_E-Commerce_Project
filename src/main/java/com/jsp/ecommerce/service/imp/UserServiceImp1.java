@@ -40,14 +40,29 @@ public class UserServiceImp1 implements UserService {
         return objectMapper.convertValue(user,UserResponse.class);
     }
 
-    public UserResponse login(UserLoginReq userLoginReq){
-        User user = userRepo.findByEmail(userLoginReq.getEmail())
-                    .orElseThrow(()-> new UserNotFound("User with email "+userLoginReq.getEmail()+" not found"));
+    public UserResponse loginByEmail(UserLoginReq userLoginReq){
 
-        if(!user.getPassword().equals(userLoginReq.getPassword())) {throw new UserPasswordInvalid("invalid Password");}
+            User user = userRepo.findByEmail(userLoginReq.getEmail())
+                    .orElseThrow(() -> new UserNotFound("User with email " + userLoginReq.getEmail() + " not found"));
 
-        return objectMapper.convertValue(user,UserResponse.class);
+            if (!user.getPassword().equals(userLoginReq.getPassword()))
+                throw new UserPasswordInvalid("invalid Password");
+
+            return objectMapper.convertValue(user, UserResponse.class);
+
     }
+
+    @Override
+    public UserResponse loginByPhone(UserLoginReq userLoginReq) {
+        User user = userRepo.findByPhone(userLoginReq.getPhone())
+                .orElseThrow(() -> new UserNotFound("User with email " + userLoginReq.getEmail() + " not found"));
+
+        if (!user.getPassword().equals(userLoginReq.getPassword()))
+            throw new UserPasswordInvalid("invalid Password");
+
+            return objectMapper.convertValue(user, UserResponse.class);
+    }
+
     public List<UserResponse> fetchAll(){
         List<UserResponse> userRes =new ArrayList<UserResponse>();
         List<User> users = userRepo.findAll();

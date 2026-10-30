@@ -13,7 +13,8 @@ public interface UserService {
 
     UserResponse CreateUser(UserSignUpReq userSignUpReq);
 
-    UserResponse login(UserLoginReq userLoginReq);
+    UserResponse loginByEmail(UserLoginReq userLoginReq);
+    UserResponse loginByPhone(UserLoginReq userLoginReq);
 
     List<UserResponse> fetchAll();
 }

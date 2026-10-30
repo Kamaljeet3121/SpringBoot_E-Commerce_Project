@@ -8,6 +8,6 @@ import lombok.Data;
 public class UserLoginReq {
     @Email
     private String email;
-    @NotBlank
     private String password;
+    private Long phone;
 }
